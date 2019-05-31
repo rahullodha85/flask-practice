@@ -9,6 +9,7 @@ class DevConfig(Config):
     """
     Local dev config
     """
+    DEBUG = True
 
 
 class ProdConfig(Config):
