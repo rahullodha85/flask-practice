@@ -33,18 +33,24 @@ def get_one_user(public_id):
 def create_user():
     data = request.json
     hashed_password = generate_password_hash(data['password'], method='sha256')
-    test = User(**json.loads(json.dumps(request.json)))
-    test.public_id = str(uuid.uuid4())
-    test.password = hashed_password
-    test.admin = False
-    db.session.add(test)
+    user = User(**json.loads(json.dumps(request.json)))
+    user.public_id = str(uuid.uuid4())
+    user.password = hashed_password
+    user.admin = False
+    db.session.add(user)
     db.session.commit()
-    return ''
+    return jsonify({'Message': 'User %s created' % user.name})
 
 
 @user_controller.route('/<public_id>', methods=['PUT'])
-def update_user():
-    return ''
+def update_user(public_id):
+    data = request.json
+    user = User.query.filter_by(public_id = public_id)
+    if not user.first():
+        return jsonify({'message': 'No user found!'}), 400
+    user.update(data)
+    db.session.commit()
+    return jsonify({'Message': 'User %s updated' % data['name']})
 
 
 @user_controller.route('/<public_id>', methods=['DELETE'])
