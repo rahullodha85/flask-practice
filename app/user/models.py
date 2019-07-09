@@ -8,6 +8,17 @@ class User(db.Model):
     password = db.Column(db.String(80))
     admin = db.Column(db.Boolean)
 
+    @property
+    def serialize(self):
+        """return serialized object"""
+        return {
+            'id':self.public_id,
+            'name':self.name,
+            'password':self.password,
+            'admin':self.admin
+        }
+
+
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(50))
