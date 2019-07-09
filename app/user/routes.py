@@ -54,5 +54,10 @@ def update_user(public_id):
 
 
 @user_controller.route('/<public_id>', methods=['DELETE'])
-def delete_user():
-    return ''
+def delete_user(public_id):
+    user = User.query.filter_by(public_id = public_id).first()
+    if not user:
+        return jsonify({'message': 'No user found!'}), 400
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'Message': 'User %s has been deleted' % public_id})
